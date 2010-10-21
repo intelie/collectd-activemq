@@ -116,6 +116,8 @@ public class ActiveMQDispatcher implements Dispatcher {
         String typeInstance = plugin.getTypeInstance();
         if (typeInstance == null){
             typeInstance = "";
+        } else {
+            typeInstance = plugin.getTypeInstance() + ": ";
         }
 
 
@@ -134,7 +136,7 @@ public class ActiveMQDispatcher implements Dispatcher {
         json.append(",");
         json.append("'timestamp':").append(ts).append(",");
         //json.append("'values':").append("'").append(cleanString(output)).append("'");
-        json.append("'values':").append("'").append(typeInstance).append(": ").append(cleanString(output)).append("'");
+        json.append("'values':").append("'").append(typeInstance).append(cleanString(output)).append("'");
         json.append("}");
         return json.toString();
     }
