@@ -27,6 +27,7 @@ For example, 'ds1:12;ds2:49'.
 
 Run
 ---
+mvn install
 mvn exec:java -Dexec.mainClass="com.intelie.collectd.ActiveMQDispatcher" -Dactivemq.url="failover:tcp://localhost:61616" -Dactivemq.queue=collectd
 
 
