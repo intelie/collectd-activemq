@@ -119,9 +119,9 @@ public class ActiveMQDispatcher implements Dispatcher {
         String tipo = "";
 
         if (plug.equals("cpu")) {
-            tipo = typeInstance + " - ";
+            tipo = typeInstance + "-";
         } else if(plug.equals("disk")){
-            tipo = type + " - ";
+            tipo = type + "-";
         }
 
         json.append("'host':").append("'").append(host).append("'").append(",");
