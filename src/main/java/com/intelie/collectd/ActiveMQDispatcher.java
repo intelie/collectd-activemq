@@ -113,20 +113,9 @@ public class ActiveMQDispatcher implements Dispatcher {
 
         StringBuffer json = new StringBuffer("{");
 
-        String plug = plugin.getPlugin();
-        String type = plugin.getType();
-        String typeInstance = plugin.getTypeInstance();
-        String tipo = "";
-
-        if (plug.equals("cpu")) {
-            tipo = typeInstance + "-";
-        } else if(plug.equals("disk")){
-            tipo = type + "-";
-        }
-
         json.append("'host':").append("'").append(host).append("'").append(",");
         json.append("'eventtype':").append("'").append(eventType).append("'").append(",");
-        json.append("'text':").append("'").append(getTextOutput(plugin)).append("'").append(",");
+        json.append("'text':").append("'").append(host).append("/").append(getTextOutput(plugin)).append("'").append(",");
 
 
         appendJsonProperty(json, "plugin", plugin.getPlugin());
@@ -138,8 +127,7 @@ public class ActiveMQDispatcher implements Dispatcher {
         appendJsonProperty(json, "typeInstance", plugin.getTypeInstance());
         json.append(",");
         json.append("'timestamp':").append(ts).append(",");
-        //json.append("'values':").append("'").append(cleanString(output)).append("'");
-        json.append("'values':").append("'").append(tipo).append(cleanString(output)).append("'");
+        json.append("'values':").append("'").append(cleanString(output)).append("'");
         json.append("}");
         return json.toString();
     }
