@@ -129,6 +129,7 @@ public class ActiveMQDispatcher implements Dispatcher {
         json.append("'timestamp':").append(ts).append(",");
         json.append("'values':").append("'").append(cleanString(output)).append("'");
         json.append("}");
+
         return json.toString();
     }
 
