@@ -26,7 +26,7 @@ public class ActiveMQDispatcher implements Dispatcher {
 
     private static final Log LOG = LogFactory.getLog(ActiveMQDispatcher.class);
 
-    private String queue = "collectd";
+    private String queue = "events";
     private String eventType = "collectd";
     private String brokerUrl = "failover:tcp://localhost:61616";
     private String delimiter = "/";
