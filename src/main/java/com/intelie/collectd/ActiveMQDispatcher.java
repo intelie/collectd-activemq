@@ -113,6 +113,9 @@ public class ActiveMQDispatcher implements Dispatcher {
 
         StringBuffer json = new StringBuffer("{");
 
+	String typeInstance = plugin.getTypeInstance();
+	String values = cleanString(output);
+            
         json.append("'host':").append("'").append(host).append("'").append(",");
         json.append("'eventtype':").append("'").append(eventType).append("'").append(",");
         json.append("'text':").append("'").append(host).append("/").append(getTextOutput(plugin)).append("'").append(",");
@@ -124,10 +127,9 @@ public class ActiveMQDispatcher implements Dispatcher {
         json.append(",");
         appendJsonProperty(json, "type", plugin.getType());
         json.append(",");
-        appendJsonProperty(json, "typeInstance", plugin.getTypeInstance());
+	json.append("'").append(typeInstance).append("':").append("'").append(values).append("'");
         json.append(",");
-        json.append("'timestamp':").append(ts).append(",");
-        json.append("'values':").append("'").append(cleanString(output)).append("'");
+        json.append("'timestamp':").append(ts);
         json.append("}");
 
         return json.toString();
