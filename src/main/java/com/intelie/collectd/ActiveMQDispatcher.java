@@ -27,7 +27,7 @@ public class ActiveMQDispatcher implements Dispatcher {
     private static final Log LOG = LogFactory.getLog(ActiveMQDispatcher.class);
 
     private String queue = "events";
-    private String eventType = "collectd";
+    //private String eventType = "collectd";
     private String brokerUrl = "failover:tcp://localhost:61616";
     private String delimiter = "/";
 
@@ -38,13 +38,12 @@ public class ActiveMQDispatcher implements Dispatcher {
     protected void loadProperties() {
         brokerUrl = System.getProperty("activemq.url", brokerUrl);
         queue = System.getProperty("activemq.queue", queue);
-        eventType = System.getProperty("eventType", eventType);
+        //  eventType = System.getProperty("eventType", eventType);
     }
 
 
     public ActiveMQDispatcher() throws JMSException {
         loadProperties();
-
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
         QueueConnection conn = factory.createQueueConnection();
         session = conn.createQueueSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
@@ -61,7 +60,9 @@ public class ActiveMQDispatcher implements Dispatcher {
         System.out.println(json);
 
         try {
-            producer.send(session.createTextMessage(json));
+            TextMessage msg = session.createTextMessage(json);
+            msg.setStringProperty("eventtype", vl.getPlugin());
+            producer.send(msg);
         } catch (JMSException e) {
             LOG.error("Error sending values '" + vl.toString() + "'.", e);
         }
@@ -74,9 +75,10 @@ public class ActiveMQDispatcher implements Dispatcher {
         System.out.println(json);
 
         try {
-            producer.send(session.createTextMessage(json));
+            TextMessage msg = session.createTextMessage(json);
+            producer.send(msg);
         } catch (JMSException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
@@ -113,23 +115,14 @@ public class ActiveMQDispatcher implements Dispatcher {
 
         StringBuffer json = new StringBuffer("{");
 
-	String typeInstance = plugin.getTypeInstance();
-	String values = cleanString(output);
-            
-        json.append("'host':").append("'").append(host).append("'").append(",");
-        json.append("'eventtype':").append("'").append(eventType).append("'").append(",");
-        json.append("'text':").append("'").append(host).append("/").append(getTextOutput(plugin)).append("'").append(",");
+        String typeInstance = plugin.getTypeInstance();
+        String values = cleanString(output);
 
-
-        appendJsonProperty(json, "plugin", plugin.getPlugin());
-        json.append(",");
-        appendJsonProperty(json, "pluginInstance", plugin.getPluginInstance());
-        json.append(",");
-        appendJsonProperty(json, "type", plugin.getType());
-        json.append(",");
-	json.append("'").append(typeInstance).append("':").append("'").append(values).append("'");
-        json.append(",");
         json.append("'timestamp':").append(ts);
+        json.append(",");
+        json.append("'host':").append("'").append(host).append("'").append(",");
+        json.append("'text':").append("'").append(host).append("/").append(getTextOutput(plugin)).append("'").append(",");
+        json.append("'").append(typeInstance).append("':").append("'").append(values).append("'");
         json.append("}");
 
         return json.toString();
